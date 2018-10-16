@@ -1,0 +1,23 @@
+<html>
+    <head>
+        <title>Police Reports Berlin</title>
+    </head>
+    <body>
+        <div>
+            Police Reports Berlin:
+            <a href="{{ url_for('searchPage') }}">Search</a>
+            <a href="{{ url_for('classes') }}">Classes</a>
+        </div>
+        <hr>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </body>
+</html>
