@@ -2,10 +2,10 @@
 
 -------------Work in Progress-------------
 
--------------Required Packages-------------
-Click
-Flask
-Flask-WTF
-Jinja2
-WTForms
-Scrapy
+## Required Packages
+* Click
+* Flask
+* Flask-WTF
+* Jinja2
+* WTForms
+* Scrapy
