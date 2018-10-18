@@ -1,6 +1,8 @@
 """Utility functions to handle policereports files. Policereports file scraped from the web need the following format:
 Columns: date,title,link,event,location
 Header: yes
+
+They can be created by running policeReportsSpider.py using Scrapy.
 """
 import csv, os
 
