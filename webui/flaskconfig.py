@@ -1,3 +1,4 @@
+"""Base config for the Flask Webapp."""
 import os
 
 class Config(object):

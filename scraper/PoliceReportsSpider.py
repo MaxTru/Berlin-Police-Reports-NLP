@@ -1,6 +1,12 @@
+"""A Scrapy Spider class which scrapes the data set for this project. It can be run with Scrapy (i.e. following command:
+"<your virtual environment>\Lib\site-packages\scrapy\cmdline.py runspider policeReportsSpider.py -o <output filename>"
+(Working directory needs to be <...>\Berlin-Police-Reports-NLP\scraper)
+"""
+
 import scrapy
 
 class PoliceReport(scrapy.Item):
+    """Scrapy Items which defines the fields of a single scraped Police Report."""
     link = scrapy.Field()
     title = scrapy.Field()
     date = scrapy.Field()
@@ -9,6 +15,7 @@ class PoliceReport(scrapy.Item):
 
 class PoliceReportsSpider(scrapy.Spider):
     name = "police_reports_spider"
+    # the archive pages.
     start_urls = [
         'https://www.berlin.de/polizei/polizeimeldungen/archiv/2014/',
         'https://www.berlin.de/polizei/polizeimeldungen/archiv/2015/',
@@ -19,7 +26,16 @@ class PoliceReportsSpider(scrapy.Spider):
     BASE_URL='https://www.berlin.de'
 
     def parse(self, response):
-        """Is called for the given start_urls."""
+        """Method that is called by scrapy for the given start_urls.
+
+        Returns
+        -------
+        scrapy.Request
+            Returns another call to a page to be scraped (ie a request). Two types of requests are possible:
+            1. for all Police Reports linked on the archive pages, the individual request is returned. As callback
+               the self.parse_report method will be called.
+            2. since the archive pages list all reports on several pages, for each next page, a new requests will be
+               returned. This request is handled with this method again (self.parse())."""
         links = response.css(".list-autoteaser li a").re(r'/polizei.+\.php')
         # Now, for every polce report we find, call a separate parse function
         for link in links:
@@ -32,7 +48,7 @@ class PoliceReportsSpider(scrapy.Spider):
             yield scrapy.Request(next_page, callback=self.parse)
 
     def parse_report(selfself, response):
-        """Is called for each police report found on the page"""
+        """Method that is called for each report which was identified on the archive pages."""
         item = PoliceReport()
         item["link"] = response.url
         item["title"] = response.css("h1.title::text").extract()
