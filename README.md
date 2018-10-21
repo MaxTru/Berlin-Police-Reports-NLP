@@ -2,10 +2,6 @@
 
 **-------------Work in Progress-------------**
 
-# Table of Contents
-1. [Required Packages](#Required Packages)
-2. [Dataset](#Dataset)
-
 # Required Packages
 * Click
 * Flask
