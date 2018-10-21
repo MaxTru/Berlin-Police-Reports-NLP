@@ -11,6 +11,7 @@
 * Scrapy
 
 # Dataset
+#### Source and Description
 The Police Reports in this demo application are scraped from the following URIs:
 * 'https://www.berlin.de/polizei/polizeimeldungen/archiv/2014/'
 * 'https://www.berlin.de/polizei/polizeimeldungen/archiv/2015/'
@@ -25,6 +26,7 @@ The following attributes of a Police Report are considered in this demo applicat
 4. event
 5. location
 
+#### Dataset used in this demo project
 The Dataset for the demo application was scraped on the 18th October 2018. The raw scraped data can be found under *data/reports_raw_2018-10-19.dat*.
 
 The initial Dataset (9852 reports) was cleaned using OpenRefine as following:
