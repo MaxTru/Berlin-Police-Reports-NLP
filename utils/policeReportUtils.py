@@ -86,7 +86,7 @@ def combined_access_report(reportsfile, metadatafile, reportid):
     reports_lines= open(os.path.abspath(reportsfile), "r").readlines()
     metadata_lines = open(os.path.abspath(metadatafile), "r").readlines()
     if reportid >= len(reports_lines) or reportid < 0:
-        return {}git
+        return {}
     else:
         return {
             "date": metadata_lines[reportid].split(",")[0],
