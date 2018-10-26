@@ -10,6 +10,12 @@
 * WTForms
 * Scrapy
 
+# Project structure
+The project contains three key modules:
+1. Scrapy Webscraper **/scraper**
+2. Flask WebUI **/webui**
+3. Dataset (see _Dataset_) **/data**
+
 # Dataset
 #### Source and Description
 The Police Reports in this demo application are scraped from the following URIs:
