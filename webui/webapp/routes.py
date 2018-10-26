@@ -3,9 +3,11 @@
 from flask import render_template, request
 from webui.webapp import app
 from webui.webapp.forms import SearchForm
+from utils import policeReportUtils as utils
+from webui import flaskconfig
 
 @app.route('/', methods=['GET', 'POST'])
-@app.route('/Search', methods=['GET', 'POST'])
+@app.route('/search', methods=['GET', 'POST'])
 def searchPage():
     """On the search page the user may enter a query and get a list of matching police reports returned.
 
@@ -20,9 +22,33 @@ def searchPage():
         return render_template('ResultPage.html', results=[form.query.data, "Result2"])
     return render_template('SearchPage.html', form=form)
 
+@app.route('/browse', methods=['GET'])
+def browsePage():
+    """A user may browse the police reports."""
+    # TODO here we need to render pre-classified police reports
+    return render_template('BrowsePage.html')
 
-@app.route('/Classes')
+@app.route('/classes', methods=['GET'])
 def classes():
     """A user may browse the police reports by a set of categories."""
     # TODO here we need to render pre-classified police reports
     return render_template('Classes.html')
+
+@app.route('/view/<int:id>', methods=['GET'])
+def viewPage(id):
+    """A user may display an individual report.
+
+    GET Requests expects to get the ID of the report passed in the field 'ID'."""
+    retrievedReport = utils.combined_access_report(flaskconfig.Config.REPORTS_PAYLOAD,
+                                                   flaskconfig.Config.REPORTS_METADATA,
+                                                   id)
+    if not bool(retrievedReport):
+        return render_template('ViewPage.html', empty="TRUE")
+    else:
+        return render_template('ViewPage.html',
+                               result="TRUE",
+                               title=retrievedReport.get("title").decode("utf-8"),
+                               location=retrievedReport.get("location").decode("utf-8"),
+                               date=retrievedReport.get("date").decode("utf-8"),
+                               event=retrievedReport.get("event").decode("utf-8"),
+                               link=retrievedReport.get("link").decode("utf-8"))

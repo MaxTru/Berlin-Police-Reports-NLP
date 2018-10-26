@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Police Report</h1>
+        {% if empty %}<h2>ID not found</h2>{% endif %}
+        {% if title %}<h2>{{ title }}</h2>{% endif %}
+        {% if location %}<b>{{ location }}</b></br>{% endif %}
+        {% if date %}<b>{{ date }}</b></br>{% endif %}
+        {% if event %}{{ event }}</br>{% endif %}
+        </br>
+        {% if link %}{{ link }}</br>{% endif %}
+{% endblock %}

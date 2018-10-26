@@ -69,14 +69,14 @@ def combined_access_report(reportsfile, metadatafile, reportid):
     ----------
     reportsfile : string
         path to the file which was created using extract_payload(...)
-    outfile : string
+    metadatafile : string
         path to the file which was created using extract_metadata(...)
     reportid : int
         ID of the report to be accessed. IDs are assumed based on the flatfile (line 0 equals ID 0)
 
     Returns
     -------
-    dict
+    dict (empty dict if ID is not valid)
         "date": string
         "title": string
         "link": string
@@ -85,12 +85,13 @@ def combined_access_report(reportsfile, metadatafile, reportid):
     """
     reports_lines= open(os.path.abspath(reportsfile), "r").readlines()
     metadata_lines = open(os.path.abspath(metadatafile), "r").readlines()
-
-    return {
-        "date": metadata_lines[reportid].split(",")[0],
-        "title": reports_lines[reportid][:reports_lines[reportid].index(".")],
-        "link": metadata_lines[reportid].split(",")[1],
-        "event": reports_lines[reportid][reports_lines[reportid].index(".") + 1:].strip(),
-        "location": metadata_lines[reportid].split(",")[2]
-    }
-
+    if reportid >= len(reports_lines) or reportid < 0:
+        return {}
+    else:
+        return {
+            "date": metadata_lines[reportid].split(",")[0],
+            "title": reports_lines[reportid][:reports_lines[reportid].index(".")],
+            "link": metadata_lines[reportid].split(",")[1],
+            "event": reports_lines[reportid][reports_lines[reportid].index(".") + 1:].strip(),
+            "location": metadata_lines[reportid].split(",")[2]
+        }
