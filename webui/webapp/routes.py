@@ -22,11 +22,26 @@ def searchPage():
         return render_template('ResultPage.html', results=[form.query.data, "Result2"])
     return render_template('SearchPage.html', form=form)
 
-@app.route('/browse', methods=['GET'])
-def browsePage():
+@app.route('/browse/<int:fromID>/<int:toID>', methods=['GET'])
+def browsePage(fromID, toID):
     """A user may browse the police reports."""
-    # TODO here we need to render pre-classified police reports
-    return render_template('BrowsePage.html')
+    if fromID >= toID or (toID - fromID) >= 50:
+        #not validate, return empty site
+        return render_template('BrowsePage.html')
+    else:
+        displayedPages = toID - fromID + 1
+        # Transform from 1-indexed to 0-indexed
+        fromID = fromID - 1
+        toID = toID - 1
+        retrievedReports = []
+        while fromID <= toID:
+            report = utils.combined_access_report(flaskconfig.Config.REPORTS_PAYLOAD,
+                                                       flaskconfig.Config.REPORTS_METADATA,
+                                                       fromID)
+            retrievedReports.append(report)
+            fromID = fromID + 1
+        print(len(retrievedReports))
+        return render_template('BrowsePage.html', reports = retrievedReports, displayedPages = displayedPages, toID = toID)
 
 @app.route('/classes', methods=['GET'])
 def classes():

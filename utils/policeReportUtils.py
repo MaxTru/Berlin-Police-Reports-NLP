@@ -93,5 +93,6 @@ def combined_access_report(reportsfile, metadatafile, reportid):
             "title": reports_lines[reportid][:reports_lines[reportid].index(".")],
             "link": metadata_lines[reportid].split(",")[1],
             "event": reports_lines[reportid][reports_lines[reportid].index(".") + 1:].strip(),
-            "location": metadata_lines[reportid].split(",")[2]
+            "location": metadata_lines[reportid].split(",")[2],
+            "id": reportid
         }
