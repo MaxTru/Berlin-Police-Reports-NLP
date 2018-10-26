@@ -1,0 +1,12 @@
+.report {
+    padding-bottom: 15;
+}
+
+.reportTitle {
+    font-size: larger;
+}
+
+.reportLocDate {
+    font-size: small;
+    font-weight: bold;
+}
