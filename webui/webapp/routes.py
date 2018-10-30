@@ -18,6 +18,7 @@ def searchPage():
     form = SearchForm(request.form)
     if form.validate_on_submit(): # Is only called when the form is submitted
         # TODO: here we need to implement the IR functionality
+
         # ResultPage will parse the items in results and output them.
         return render_template('ResultPage.html', results=[form.query.data, "Result2"])
     return render_template('SearchPage.html', form=form)

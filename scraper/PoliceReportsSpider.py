@@ -13,31 +13,36 @@ class PoliceReport(scrapy.Item):
     location = scrapy.Field()
     event = scrapy.Field()
 
-class PoliceReportsSpider(scrapy.Spider):
+class PoliceReportsSpider(scrapy.Spider) :
+
+    # identification of the Spider
     name = "police_reports_spider"
-    # the archive pages.
+    # allowed domains for crawling websites
+    allowed_domains = ['berlin.de']
+    # the list of archive URLs used to create the initial requests for the Spider
     start_urls = [
-        'https://www.berlin.de/polizei/polizeimeldungen/archiv/2014/',
-        'https://www.berlin.de/polizei/polizeimeldungen/archiv/2015/',
-        'https://www.berlin.de/polizei/polizeimeldungen/archiv/2016/',
-        'https://www.berlin.de/polizei/polizeimeldungen/archiv/2017/',
+       # 'https://www.berlin.de/polizei/polizeimeldungen/archiv/2014/',
+       # 'https://www.berlin.de/polizei/polizeimeldungen/archiv/2015/',
+        #'https://www.berlin.de/polizei/polizeimeldungen/archiv/2016/',
+        #'https://www.berlin.de/polizei/polizeimeldungen/archiv/2017/',
         'https://www.berlin.de/polizei/polizeimeldungen/archiv/2018/'
     ]
-    BASE_URL='https://www.berlin.de'
+    BASE_URL = 'https://www.berlin.de'
 
     def parse(self, response):
-        """Method that is called by scrapy for the given start_urls.
+        """Method that is called by Scrapy for the given start_urls.
 
         Returns
         -------
         scrapy.Request
-            Returns another call to a page to be scraped (ie a request). Two types of requests are possible:
+            Returns another call to a page to be scraped (i.e. a request). Two types of requests are possible:
             1. for all Police Reports linked on the archive pages, the individual request is returned. As callback
                the self.parse_report method will be called.
             2. since the archive pages list all reports on several pages, for each next page, a new requests will be
                returned. This request is handled with this method again (self.parse())."""
+        # Using the response object of CSS to extract all reports from the crawled URLs
         links = response.css(".list-autoteaser li a").re(r'/polizei.+\.php')
-        # Now, for every polce report we find, call a separate parse function
+        # Now, for every police report we find, call a separate parse function
         for link in links:
             absolute_url = self.BASE_URL + link
             yield scrapy.Request(absolute_url, callback=self.parse_report)
@@ -53,7 +58,7 @@ class PoliceReportsSpider(scrapy.Spider):
         item["link"] = response.url
         item["title"] = response.css("h1.title::text").extract()
         item["date"] = response.css(".polizeimeldung::text").re("[0-9]+\.[0-9]+\.[0-9]+")
-        # Issue with the location: sometimes it is captured in the title of the report, in this case we will not catch it
+        # Issue with location: sometimes it is captured in the title of the report, in this case we will not catch it
         if len(response.css("div.polizeimeldung:not(first-child)::text").extract()) > 1:
             item["location"] = response.css("div.polizeimeldung:not(first-child)::text").extract()[1]
         else:
