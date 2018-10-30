@@ -8,7 +8,7 @@
 * Flask-WTF
 * Jinja2
 * WTForms
-* Scrapy - It is a python framework which helps crawl web pages and further parse and store the results.
+* Scrapy 
 * Metapy
 # Project structure
 The project contains three key modules:
