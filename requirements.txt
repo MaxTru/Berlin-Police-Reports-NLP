@@ -1,0 +1,7 @@
+ Click
+ Flask
+ Flask-WTF
+ Jinja2
+ WTForms
+ Scrapy
+ Metapy
