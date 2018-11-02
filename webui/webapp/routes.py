@@ -5,12 +5,13 @@ from webui.webapp import app
 from webui.webapp.forms import SearchForm
 from utils import policeReportUtils as utils
 from webui import flaskconfig
+from webui.webapp import cfg
+import metapy
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/search', methods=['GET', 'POST'])
 def searchPage():
     """On the search page the user may enter a query and get a list of matching police reports returned.
-
     Returns
     -------
     Returns either a ResultPage.html or a SearchPage.html depending on whether the user call the link with or
@@ -18,7 +19,11 @@ def searchPage():
     form = SearchForm(request.form)
     if form.validate_on_submit(): # Is only called when the form is submitted
         # TODO: here we need to implement the IR functionality
-
+        idx = metapy.index.make_inverted_index(cfg)
+        query = metapy.index.Document()
+        ranker = metapy.index.OkapiBM25()
+        query.content(form.query.data)
+        results = ranker.score(idx, query)
         # ResultPage will parse the items in results and output them.
         return render_template('ResultPage.html', results=[form.query.data, "Result2"])
     return render_template('SearchPage.html', form=form)
@@ -53,7 +58,6 @@ def classes():
 @app.route('/view/<int:id>', methods=['GET'])
 def viewPage(id):
     """A user may display an individual report.
-
     GET Requests expects to get the ID of the report passed in the field 'ID'."""
     retrievedReport = utils.combined_access_report(flaskconfig.Config.REPORTS_PAYLOAD,
                                                    flaskconfig.Config.REPORTS_METADATA,
@@ -67,4 +71,4 @@ def viewPage(id):
                                location=retrievedReport.get("location").decode("utf-8"),
                                date=retrievedReport.get("date").decode("utf-8"),
                                event=retrievedReport.get("event").decode("utf-8"),
-                               link=retrievedReport.get("link").decode("utf-8"))
+link=retrievedReport.get("link").decode("utf-8"))
