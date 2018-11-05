@@ -20,7 +20,7 @@ def searchPage():
     if form.validate_on_submit(): # Is only called when the form is submitted
         # TODO: here we need to implement the IR functionality
         # TODO this should be configurd in the config file flaskconfig.oy and not directly in code
-        cfg = os.path.abspath("webapp/search/config.toml")
+        cfg = os.path.abspath("../search/config.toml")
         # TODO: the indexation should not be performed at runtime (the user would wait forever in this case). I think we should do this when the Flask Server starts up.
         idx = metapy.index.make_inverted_index(cfg)
         query = metapy.index.Document()

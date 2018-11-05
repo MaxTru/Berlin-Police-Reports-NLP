@@ -1,7 +1,7 @@
 index = "idx"
 corpus = "line.toml"
 dataset = "data"
-prefix = ".."
+prefix = "."
 stop-words = "german-stopwords.txt"
 [[analyzers]]
 	method = "ngram-word"
