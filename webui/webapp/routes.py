@@ -5,7 +5,7 @@ from webui.webapp import app
 from webui.webapp.forms import SearchForm
 from utils import policeReportUtils as utils
 from webui import flaskconfig
-from webui.webapp import cfg
+import os
 import metapy
 
 @app.route('/', methods=['GET', 'POST'])
@@ -19,9 +19,13 @@ def searchPage():
     form = SearchForm(request.form)
     if form.validate_on_submit(): # Is only called when the form is submitted
         # TODO: here we need to implement the IR functionality
+        # TODO this should be configurd in the config file flaskconfig.oy and not directly in code
+        cfg = os.path.abspath("webapp/search/config.toml")
+        # TODO: the indexation should not be performed at runtime (the user would wait forever in this case). I think we should do this when the Flask Server starts up.
         idx = metapy.index.make_inverted_index(cfg)
         query = metapy.index.Document()
         ranker = metapy.index.OkapiBM25()
+        #TODO: next two lines run forever. I dont know why.
         query.content(form.query.data)
         results = ranker.score(idx, query)
         # ResultPage will parse the items in results and output them.
@@ -31,6 +35,7 @@ def searchPage():
 @app.route('/browse/<int:fromID>/<int:toID>', methods=['GET'])
 def browsePage(fromID, toID):
     """A user may browse the police reports."""
+    # TODO: the max limit of reports to show needs to be configurable in flaskconfig.py
     if fromID >= toID or (toID - fromID) >= 50:
         #not validate, return empty site
         return render_template('BrowsePage.html')
