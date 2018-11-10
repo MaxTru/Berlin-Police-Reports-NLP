@@ -15,6 +15,7 @@ The project contains three key modules:
 1. Scrapy Webscraper **/scraper**
 2. Flask WebUI **/webui**
 3. Dataset (see _Dataset_) **/data**
+4. Starspace (see _Starspace_) **/starspace**
 
 # Dataset
 #### Source and Description
@@ -41,3 +42,22 @@ The initial Dataset (9852 reports) was cleaned using OpenRefine as following:
 
 The resulting cleaned Dataset can be found under *data/reports_cleaned_2018-10-21.dat*. Further, the cleaned Dataset was split into a file for the payload (the title of the report + ". " + the description) and a file for the metadata respectively (date, location and link). This split allows for easier further processing.
 
+# StarSpace
+#### Idea
+StarSpace is used in this project to perform a document classification on all police reports. In this first demo, three classes were defined:
+1. Traffic Offense
+2. Violent Crime
+3. Criminal Damage or Fire
+
+#### Example
+A training dataset with random n=500 docs and a test dataset with random n=250 documents. The entire document tokenization, training, testing and prediction is performed in the script _train_and_apply_model.sh_. The script must be run in a directory where StarSpace is located (see https://github.com/facebookresearch/StarSpace/). The predictions are picked up in the Flask WebApp to allow the user to browse police reports by document class (see 3 classes mentioned before).
+
+# Sources
+```
+@article{wu2017starspace,
+  title={StarSpace: Embed All The Things!},
+  author = {{Wu}, L. and {Fisch}, A. and {Chopra}, S. and {Adams}, K. and {Bordes}, A. and {Weston}, J.},
+  journal={arXiv preprint arXiv:{1709.03856}},
+  year={2017}
+}
+```
