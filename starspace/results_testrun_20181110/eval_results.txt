@@ -1,0 +1,59 @@
+Arguments: 
+lr: 0.01
+dim: 10
+epoch: 5
+maxTrainTime: 8640000
+validationPatience: 10
+saveEveryEpoch: 0
+loss: hinge
+margin: 0.05
+similarity: dot
+maxNegSamples: 10
+negSearchLimit: 50
+thread: 10
+minCount: 1
+minCountLabel: 1
+label: __label__
+ngrams: 1
+bucket: 2000000
+adagrad: 1
+trainMode: 0
+fileFormat: fastText
+normalizeText: 0
+dropoutLHS: 0
+dropoutRHS: 0
+Start to load a trained starspace model.
+STARSPACE-2017-2
+Initialized model weights. Model size :
+matrix : 7797 10
+Model loaded.
+Loading data from file : police_reports_data/reports_cleaned_payload_2018-10-21_sample_n=750_normalized.test
+Total number of examples loaded : 250
+------Loaded model args:
+Arguments: 
+lr: 0.01
+dim: 10
+epoch: 5
+maxTrainTime: 8640000
+validationPatience: 10
+saveEveryEpoch: 0
+loss: hinge
+margin: 0.05
+similarity: dot
+maxNegSamples: 3
+negSearchLimit: 5
+thread: 10
+minCount: 1
+minCountLabel: 1
+label: __label__
+ngrams: 1
+bucket: 2000000
+adagrad: 1
+trainMode: 0
+fileFormat: fastText
+normalizeText: 0
+dropoutLHS: 0
+dropoutRHS: 0
+Predictions use 3 known labels.
+Evaluation Metrics : 
+hit@1: 0.912 hit@10: 1 hit@20: 1 hit@50: 1 mean ranks : 1.12 Total examples : 250

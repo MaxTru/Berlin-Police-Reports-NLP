@@ -1,0 +1,3 @@
+__label__1 Sachbeschädigung, Brand
+__label__3 Gewaltverbrechen
+__label__4 Verkehr
