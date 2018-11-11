@@ -6,9 +6,27 @@
     <body>
         <div>
             Police Reports Berlin:
-            <a href="{{ url_for('searchPage') }}">Search</a>
-            <a href="{{ url_for('browsePage', fromID=1, toID=10) }}">All Reports</a>
-            <a href="{{ url_for('classes') }}">Classes</a>
+            <a href="{{ url_for('searchPage') }}">
+                {% if request.path.startswith(url_for('searchPage')) %}
+                    <b>Search</b>
+                {% else %}
+                    Search
+                {% endif %}
+            </a>
+            <a href="{{ url_for('browsePage', fromID=1, toID=10) }}">
+                {% if request.path.startswith(url_for('browsePage', fromID=1, toID=10)) %}
+                    <b>All Reports</b>
+                {% else %}
+                    All Reports
+                {% endif %}
+            </a>
+            <a href="{{ url_for('classes') }}">
+            {% if request.path.startswith(url_for('classes')) %}
+                    <b>Classes</b>
+                {% else %}
+                    Classes
+                {% endif %}
+            </a>
         </div>
         <hr>
         {% with messages = get_flashed_messages() %}
