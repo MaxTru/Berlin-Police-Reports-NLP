@@ -4,7 +4,7 @@ Header: yes
 
 They can be created by running policeReportsSpider.py using Scrapy.
 """
-import csv, os
+import csv, os, exceptions
 
 def extract_payload(infile, outfile):
     """Utility method to extract the metadata of a scraped policereports file and store only the metadata to another file.
@@ -76,7 +76,7 @@ def combined_access_report(reportsfile, metadatafile, reportid):
 
     Returns
     -------
-    dict (empty dict if ID is not valid)
+    dict
         "date": string
         "title": string
         "link": string
@@ -85,14 +85,59 @@ def combined_access_report(reportsfile, metadatafile, reportid):
     """
     reports_lines= open(os.path.abspath(reportsfile), "r").readlines()
     metadata_lines = open(os.path.abspath(metadatafile), "r").readlines()
-    if reportid >= len(reports_lines) or reportid < 0:
-        return {}
+    if reportid >= len(reports_lines) \
+            or reportid < 0 \
+            or len(reports_lines) != len(metadata_lines):
+        raise IndexError("Invalid reportid or input files with different lenghts.")
     else:
         return {
-            "date": metadata_lines[reportid].split(",")[0],
-            "title": reports_lines[reportid][:reports_lines[reportid].index(".")],
-            "link": metadata_lines[reportid].split(",")[1],
-            "event": reports_lines[reportid][reports_lines[reportid].index(".") + 1:].strip(),
-            "location": metadata_lines[reportid].split(",")[2],
+            "date": metadata_lines[reportid].split(",")[0].strip().decode("utf-8"),
+            "title": reports_lines[reportid][:reports_lines[reportid].index(".")].strip().decode("utf-8"),
+            "link": metadata_lines[reportid].split(",")[1].strip().decode("utf-8"),
+            "event": reports_lines[reportid][reports_lines[reportid].index(".") + 1:].strip().strip().decode("utf-8"),
+            "location": metadata_lines[reportid].split(",")[2].strip().decode("utf-8"),
             "id": reportid
+        }
+
+def combined_access_report_labels(reportsfile, metadatafile, labelfile, reportid):
+    """Utility method to access a particular police report including its metadata and its label as dictionary.
+
+    Parameters
+    ----------
+    reportsfile : string
+        path to the file which was created using extract_payload(...)
+    metadatafile : string
+        path to the file which was created using extract_metadata(...)
+    labelfile : string
+        path to the file which contains the labels for all police reports
+    reportid : int
+        ID of the report to be accessed. IDs are assumed based on the flatfile (line 0 equals ID 0)
+
+    Returns
+    -------
+    dict
+        "date": string
+        "title": string
+        "link": string
+        "event": string
+        "location": string
+        "label": string
+    """
+    reports_lines = open(os.path.abspath(reportsfile), "r").readlines()
+    metadata_lines = open(os.path.abspath(metadatafile), "r").readlines()
+    label_lines = open(os.path.abspath(labelfile), "r").readlines()
+    if reportid >= len(reports_lines) \
+            or reportid < 0 \
+            or len(reports_lines) != len(metadata_lines) \
+            or len(reports_lines) != len(label_lines):
+        raise IndexError("Invalid reportid or input files with different lenghts.")
+    else:
+        return {
+            "date": metadata_lines[reportid].split(",")[0].strip().decode("utf-8"),
+            "title": reports_lines[reportid][:reports_lines[reportid].index(".")].strip().decode("utf-8"),
+            "link": metadata_lines[reportid].split(",")[1].strip().decode("utf-8"),
+            "event": reports_lines[reportid][reports_lines[reportid].index(".") + 1:].strip().decode("utf-8"),
+            "location": metadata_lines[reportid].split(",")[2].strip().decode("utf-8"),
+            "id": reportid,
+            "label": label_lines[reportid].strip().decode("utf-8")
         }

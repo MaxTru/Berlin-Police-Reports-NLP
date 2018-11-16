@@ -1,6 +1,6 @@
 """Implements the forms of the Flask WebApp."""
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, RadioField
 from wtforms.validators import DataRequired
 
 class SearchForm(FlaskForm):

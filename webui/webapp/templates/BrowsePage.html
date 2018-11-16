@@ -6,10 +6,10 @@
         {% for report in reports %}
             <div class="report">
                 <div class="reportTitle">
-                <a href="/view/{{ report.id }}">{{ report.title.decode("utf-8") }}</a>
+                <a href="/view/{{ report.id }}">{{ report.title }}</a>
                 </div>
-            <div class="reportLocDate">{{ report.location.decode("utf-8") }} | {{ report.date.decode("utf-8") }}</div>
-            <div class="reportLink">{{ " ".join(report.event.decode("utf-8").split()[0:30]) + " [...]" }}</div>
+            <div class="reportLocDate">{{ report.location }} | {{ report.date }}</div>
+            <div class="reportLink">{{ " ".join(report.event.split()[0:30]) + " [...]" }}</div>
             </div>
         {% endfor %}
         <div class="nav"><a href="javascript:history.back()">Last</a> <a href="/browse/{{ toID + 2 }}/{{ toID + 1 + displayedPages }}">Next</a></div>

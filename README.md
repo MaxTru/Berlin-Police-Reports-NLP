@@ -10,6 +10,7 @@
 * WTForms
 * Scrapy 
 * Metapy
+* Flask-SQLAlchemy
 # Project structure
 The project contains three key modules:
 1. Scrapy Webscraper **/scraper**
