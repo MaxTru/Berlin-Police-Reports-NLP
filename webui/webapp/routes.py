@@ -2,7 +2,7 @@
 
 from flask import render_template, request
 from webui.webapp import app
-from webui.webapp.forms import SearchForm, FilterForm
+from webui.webapp.forms import SearchForm
 from utils import policeReportUtils as utils
 from webui import flaskconfig
 from webui.database.models import Report
@@ -42,7 +42,6 @@ def searchPage():
 @app.route('/browse/<int:fromID>/<int:toID>', methods=['GET', 'POST'])
 def browsePage(fromID, toID):
     """A user may browse the police reports."""
-    form = FilterForm()
     # TODO: the max limit of reports to show needs to be configurable in flaskconfig.py
     if fromID >= toID or (toID - fromID) >= 50:
         #not validate, return empty site
@@ -56,7 +55,7 @@ def browsePage(fromID, toID):
             and_(Report.id >= fromID,
                  Report.id <= toID)
         ).all()
-        return render_template('BrowsePage.html', reports = retrievedReports, displayedPages = displayedPages, toID = toID, form=form)
+        return render_template('BrowsePage.html', reports = retrievedReports, displayedPages = displayedPages, toID = toID)
 
 @app.route('/classes', methods=['GET'])
 def classes():
