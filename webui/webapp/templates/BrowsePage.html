@@ -2,14 +2,10 @@
 
 {% block content %}
     <h1>Browse All Reports</h1>
-    <form id="orderingForm" method="post">
-        {{ orderingForm.hidden_tag() }}
-        {{ orderingForm.order }}
-    <input type="submit">
-    </form>
-    <form id="classesForm" method="post">
-        {{ classesForm.hidden_tag() }}
-        {{ classesForm.classes }}
+    <form id="filterForm" method="post">
+        {{ filterForm.hidden_tag() }}
+        {{ filterForm.order }}
+        {{ filterForm.classes }}
     <input type="submit">
     </form>
     {% if reports %}

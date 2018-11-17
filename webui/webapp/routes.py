@@ -2,7 +2,7 @@
 
 from flask import render_template, request, session
 from webui.webapp import app
-from webui.webapp.forms import SearchForm, OrderingForm, ClassesForm
+from webui.webapp.forms import SearchForm, FilterForm
 from utils import policeReportUtils as utils
 from webui import flaskconfig
 from webui.database.models import Report
@@ -45,12 +45,11 @@ def browsePage(fromID, toID):
     # Initialize forms:
     # 1. Initilaize with default as defiend in class
     # 2. If the page is loaded without a submit, fill it with the value stored in the session
-    orderingForm = OrderingForm(request.form)
-    if (not orderingForm.validate_on_submit()) and "ordering" in session:
-        orderingForm.order.data = session["ordering"]
-    classesForm = ClassesForm(request.form)
-    if (not classesForm.validate_on_submit()) and "classes" in session:
-        classesForm.classes.data = session["classes"]
+    filterForm = FilterForm(request.form)
+    if (not filterForm.validate_on_submit()) and "ordering" in session:
+        filterForm.order.data = session["ordering"]
+    if (not filterForm.validate_on_submit()) and "classes" in session:
+        filterForm.classes.data = session["classes"]
 
     # TODO: implement error handling (e.g. not too many results at once
     displayedPages = toID - fromID
@@ -59,29 +58,29 @@ def browsePage(fromID, toID):
     retrievedReports = Report.query
 
     # Handle Ordering Filter
-    if orderingForm.order.data == 'asc':
-        session["ordering"]=orderingForm.order.data
+    if filterForm.order.data == 'asc':
+        session["ordering"]=filterForm.order.data
         retrievedReports = retrievedReports.order_by(asc(Report.date))
-    elif orderingForm.order.data == 'desc':
-        session["ordering"] = orderingForm.order.data
+    elif filterForm.order.data == 'desc':
+        session["ordering"] = filterForm.order.data
         retrievedReports = retrievedReports.order_by(desc(Report.date))
     else:
-        session["ordering"] = orderingForm.order.data
+        session["ordering"] = filterForm.order.data
         retrievedReports = retrievedReports
 
     # Handle Classes Filter
-    if classesForm.classes.data == 'none':
-        session["classes"]=classesForm.classes.data
+    if filterForm.classes.data == 'none':
+        session["classes"]=filterForm.classes.data
         retrievedReports = retrievedReports
     else:
-        session["classes"] = classesForm.classes.data
-        retrievedReports = retrievedReports.filter(Report.label==classesForm.classes.data)
+        session["classes"] = filterForm.classes.data
+        retrievedReports = retrievedReports.filter(Report.label==filterForm.classes.data)
 
     retrievedReports = retrievedReports.limit(toID - fromID) \
         .offset(fromID) \
         .all()
     return render_template('BrowsePage.html', reports=retrievedReports, displayedPages=displayedPages, toID=toID,
-                           orderingForm=orderingForm, classesForm=classesForm)
+                           filterForm=filterForm)
 
 @app.route('/classes', methods=['GET'])
 def classes():
