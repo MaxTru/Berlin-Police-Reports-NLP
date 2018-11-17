@@ -40,6 +40,7 @@ The Dataset for the demo application was scraped on the 18th October 2018. The r
 The initial Dataset (9852 reports) was cleaned using OpenRefine as following:
 1. Removed duplicates (#3)
 2. Removed reports with empty event description (#19)
+3. Formatted dates in Metadate according to ISO 8601 (see *date/ISO_transform_date.sh*)
 
 The resulting cleaned Dataset can be found under *data/reports_cleaned_2018-10-21.dat*. Further, the cleaned Dataset was split into a file for the payload (Title and event; filename: _data.dat_) and a file for the metadata respectively (date, location and link). This split allows for easier further processing.
 
