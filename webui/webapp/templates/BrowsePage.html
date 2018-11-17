@@ -2,6 +2,16 @@
 
 {% block content %}
     <h1>Browse All Reports</h1>
+    <form id="orderingForm" method="post">
+        {{ orderingForm.hidden_tag() }}
+        {{ orderingForm.order }}
+    <input type="submit">
+    </form>
+    <form id="classesForm" method="post">
+        {{ classesForm.hidden_tag() }}
+        {{ classesForm.classes }}
+    <input type="submit">
+    </form>
     {% if reports %}
         {% for report in reports %}
             <div class="report">
@@ -12,6 +22,6 @@
             <div class="reportLink">{{ " ".join(report.event.split()[0:30]) + " [...]" }}</div>
             </div>
         {% endfor %}
-        <div class="nav"><a href="javascript:history.back()">Last</a> <a href="/browse/{{ toID + 2 }}/{{ toID + 1 + displayedPages }}">Next</a></div>
+        <div class="nav"><a href="javascript:history.back()">Last</a> <a href="/browse/{{ toID + 1 }}/{{ toID + 1 + displayedPages }}">Next</a></div>
     {% endif %}
 {% endblock %}

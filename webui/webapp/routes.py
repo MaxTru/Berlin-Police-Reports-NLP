@@ -1,12 +1,12 @@
 """Defines the URIs which can called in the Flask Webapp and the logic behind."""
 
-from flask import render_template, request
+from flask import render_template, request, session
 from webui.webapp import app
-from webui.webapp.forms import SearchForm
+from webui.webapp.forms import SearchForm, OrderingForm, ClassesForm
 from utils import policeReportUtils as utils
 from webui import flaskconfig
 from webui.database.models import Report
-from sqlalchemy import and_, desc
+from sqlalchemy import and_, desc, asc
 import os
 import metapy
 
@@ -42,20 +42,46 @@ def searchPage():
 @app.route('/browse/<int:fromID>/<int:toID>', methods=['GET', 'POST'])
 def browsePage(fromID, toID):
     """A user may browse the police reports."""
-    # TODO: the max limit of reports to show needs to be configurable in flaskconfig.py
-    if fromID >= toID or (toID - fromID) >= 50:
-        #not validate, return empty site
-        return render_template('BrowsePage.html', form=form)
+    # Initialize forms:
+    # 1. Initilaize with default as defiend in class
+    # 2. If the page is loaded without a submit, fill it with the value stored in the session
+    orderingForm = OrderingForm(request.form)
+    if (not orderingForm.validate_on_submit()) and "ordering" in session:
+        orderingForm.order.data = session["ordering"]
+    classesForm = ClassesForm(request.form)
+    if (not classesForm.validate_on_submit()) and "classes" in session:
+        classesForm.classes.data = session["classes"]
+
+    # TODO: implement error handling (e.g. not too many results at once
+    displayedPages = toID - fromID
+    # Transform from 1-indexed to 0-indexed
+    fromID = fromID - 1
+    retrievedReports = Report.query
+
+    # Handle Ordering Filter
+    if orderingForm.order.data == 'asc':
+        session["ordering"]=orderingForm.order.data
+        retrievedReports = retrievedReports.order_by(asc(Report.date))
+    elif orderingForm.order.data == 'desc':
+        session["ordering"] = orderingForm.order.data
+        retrievedReports = retrievedReports.order_by(desc(Report.date))
     else:
-        displayedPages = toID - fromID + 1
-        # Transform from 1-indexed to 0-indexed
-        fromID = fromID - 1
-        toID = toID - 1
-        retrievedReports = Report.query.filter(
-            and_(Report.id >= fromID,
-                 Report.id <= toID)
-        ).all()
-        return render_template('BrowsePage.html', reports = retrievedReports, displayedPages = displayedPages, toID = toID)
+        session["ordering"] = orderingForm.order.data
+        retrievedReports = retrievedReports
+
+    # Handle Classes Filter
+    if classesForm.classes.data == 'none':
+        session["classes"]=classesForm.classes.data
+        retrievedReports = retrievedReports
+    else:
+        session["classes"] = classesForm.classes.data
+        retrievedReports = retrievedReports.filter(Report.label==classesForm.classes.data)
+
+    retrievedReports = retrievedReports.limit(toID - fromID) \
+        .offset(fromID) \
+        .all()
+    return render_template('BrowsePage.html', reports=retrievedReports, displayedPages=displayedPages, toID=toID,
+                           orderingForm=orderingForm, classesForm=classesForm)
 
 @app.route('/classes', methods=['GET'])
 def classes():
