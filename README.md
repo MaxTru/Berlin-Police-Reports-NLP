@@ -56,6 +56,7 @@ StarSpace is used in this project to perform a document classification on all po
 A training dataset with random n=500 docs and a test dataset with random n=250 documents. The entire document tokenization, training, testing and prediction is performed in the script _train_and_apply_model.sh_. The script must be run in a directory where StarSpace is located (see https://github.com/facebookresearch/StarSpace/). The predictions are picked up in the Flask WebApp to allow the user to browse police reports by document class (see 3 classes mentioned before).
 
 # Sources
+##### StarSpace
 ```
 @article{wu2017starspace,
   title={StarSpace: Embed All The Things!},
@@ -64,3 +65,6 @@ A training dataset with random n=500 docs and a test dataset with random n=250 d
   year={2017}
 }
 ```
+##### German Stopwords
+https://github.com/solariz/german_stopwords/blob/master/german_stopwords_full.txt
+

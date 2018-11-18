@@ -3,12 +3,11 @@
 from flask import render_template, request, session
 from webui.webapp import app
 from webui.webapp.forms import SearchForm, FilterForm
-from utils import policeReportUtils as utils
-from webui import flaskconfig
+import sys
+from webui.flaskconfig import Config
 from webui.database.models import Report
 from sqlalchemy import and_, desc, asc
-import os
-import metapy
+
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/search', methods=['GET', 'POST'])
@@ -20,22 +19,30 @@ def searchPage():
     without having submitted the query entry form."""
     form = SearchForm(request.form)
     if form.validate_on_submit(): # Is only called when the form is submitted
-        # TODO: here we need to implement the IR functionality
-        # TODO this should be configurd in the config file flaskconfig.oy and not directly in code
-        cfg = os.path.abspath("./search/config.toml")
-        # TODO: the indexation should not be performed at runtime (the user would wait forever in this case). I think we should do this when the Flask Server starts up.
-        idx = metapy.index.make_inverted_index(cfg)
-        print("Index was built....")
+        if "metapy" in sys.modules:
+         #   # reload(metapy) doenst work
+         #   reload("metapy") doestn work
+            # metapy = sys.modules("metapy") doenst work
+            #del sys.modules["metapy"]
+            #import metapy doesnt work
+            metapy = sys.modules["metapy"]
+        else:
+            import metapy
+            metapy.log_to_stderr()
+        # TODO: this code block only runs ONCE. Once the user clicks twice on search the ranker.score(...) runs forever. figuring out why...
+        print("1")
+        idx = metapy.index.make_inverted_index(Config.CONFIG_TOML)
+        print(idx.avg_doc_length())
+        print("2")
+        ranker = metapy.index.OkapiBM25()
+        print("3")
         query = metapy.index.Document()
-        print("Query initilaized...")
-        ranker = metapy.index.OkapiBM25(k1=2,b=0.65,k3=500)
-        #TODO: next two lines run forever. I dont know why.
-        print("Ranker initilaized...")
-        query.content(form.query.data)
-        print("Query content filled...")
-        results = ranker.score(idx, query, 10)
-        print("Results created...")
-        # ResultPage will parse the items in results and output them.
+        print("4")
+        query.content("auto")
+        print("5")
+        top = ranker.score(idx, query, num_results=10)
+        print("6")
+        print(top)
         return render_template('ResultPage.html', results=[form.query.data, "Result2"])
     return render_template('SearchPage.html', form=form)
 
