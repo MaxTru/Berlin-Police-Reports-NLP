@@ -1,13 +1,12 @@
 """Defines the URIs which can called in the Flask Webapp and the logic behind."""
 
-from flask import render_template, request, session
+from flask import render_template, request, session, make_response
 from webui.webapp import app
 from webui.webapp.forms import SearchForm, FilterForm
 import sys
 from webui.flaskconfig import Config
 from webui.database.models import Report
 from sqlalchemy import and_, desc, asc
-
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/search', methods=['GET', 'POST'])
@@ -40,10 +39,19 @@ def searchPage():
         print("4")
         query.content("auto")
         print("5")
-        top = ranker.score(idx, query, num_results=10)
+        top = ranker.score(idx, query, num_results=5)
         print("6")
         print(top)
-        return render_template('ResultPage.html', results=[form.query.data, "Result2"])
+        #displayedPages = toID - fromID
+        # Transform from 1-indexed to 0-indexed
+        #fromID = fromID - 1
+        #results =[]
+        retrievedReports = Report.query
+        for (d_id,_) in top:
+            results = retrievedReports.filter(Report.id == d_id)
+            print (d_id)
+
+        return render_template('ResultPage.html', reports=results)
     return render_template('SearchPage.html', form=form)
 
 @app.route('/browse/<int:fromID>/<int:toID>', methods=['GET', 'POST'])
