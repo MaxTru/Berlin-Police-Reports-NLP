@@ -3,10 +3,6 @@ corpus = "line.toml"
 dataset = "data"
 prefix = "."
 stop-words = "search/german-stopwords.txt"
-start-exceptions = "search/sentence-start-exceptions.txt"
-end-exceptions = "search/sentence-end-exceptions.txt"
-function-words = "search/function-words.txt"
-punctuation = "search/sentence-punctuation.txt"
 
 [[analyzers]]
 method = "ngram-word"

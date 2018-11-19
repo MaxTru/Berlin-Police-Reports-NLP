@@ -1,58 +1,49 @@
 """Defines the URIs which can called in the Flask Webapp and the logic behind."""
 
-from flask import render_template, request, session, make_response
+from flask import render_template, request, session
 from webui.webapp import app
 from webui.webapp.forms import SearchForm, FilterForm
-import sys
-from webui.flaskconfig import Config
 from webui.database.models import Report
 from sqlalchemy import and_, desc, asc
+import subprocess
+import re
 
-@app.route('/', methods=['GET', 'POST'])
-@app.route('/search', methods=['GET', 'POST'])
+@app.route('/', methods=['GET'])
+@app.route('/search', methods=['GET'])
 def searchPage():
-    """On the search page the user may enter a query and get a list of matching police reports returned.
+    """On the search page the user may enter a query.
     Returns
     -------
-    Returns either a ResultPage.html or a SearchPage.html depending on whether the user call the link with or
-    without having submitted the query entry form."""
+    Returns the SearchPage.html with the initialized query form."""
     form = SearchForm(request.form)
-    if form.validate_on_submit(): # Is only called when the form is submitted
-        if "metapy" in sys.modules:
-         #   # reload(metapy) doenst work
-         #   reload("metapy") doestn work
-            # metapy = sys.modules("metapy") doenst work
-            #del sys.modules["metapy"]
-            #import metapy doesnt work
-            metapy = sys.modules["metapy"]
-        else:
-            import metapy
-            metapy.log_to_stderr()
-        # TODO: this code block only runs ONCE. Once the user clicks twice on search the ranker.score(...) runs forever. figuring out why...
-        print("1")
-        idx = metapy.index.make_inverted_index(Config.CONFIG_TOML)
-        print(idx.avg_doc_length())
-        print("2")
-        ranker = metapy.index.OkapiBM25()
-        print("3")
-        query = metapy.index.Document()
-        print("4")
-        query.content("auto")
-        print("5")
-        top = ranker.score(idx, query, num_results=5)
-        print("6")
-        print(top)
-        #displayedPages = toID - fromID
-        # Transform from 1-indexed to 0-indexed
-        #fromID = fromID - 1
-        #results =[]
-        retrievedReports = Report.query
-        for (d_id,_) in top:
-            results = retrievedReports.filter(Report.id == d_id)
-            print (d_id)
-
-        return render_template('ResultPage.html', reports=results)
     return render_template('SearchPage.html', form=form)
+
+@app.route('/search', methods=['POST'])
+def searchPageResults():
+    """After having searched, the user receives a result page with the search results.
+    Returns
+    -------
+    Returns ResultPage.html with the query results (docs)."""
+    form = SearchForm(request.form)
+    if form.validate_on_submit():
+        # TODO: This is a hack, but when running metapy directly in Flask is runs forever. This is why I run it as \
+        # TODO: a separate process
+        proc = subprocess.Popen(["python", "search/searcher.py"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
+        proc.stdin.write(form.query.data.encode("utf-8").strip() + "\n")
+        proc.stdin.close()
+        while proc.returncode is None:
+            proc.poll()
+        results = proc.stdout.read()
+        print("Retrieved reports and ranking: " + results.splitlines()[0])
+        relevantIDs = re.findall("\d+L", results.splitlines()[0])
+        relevantReport = Report.query
+        result = []
+        for x in relevantIDs:
+            result.append(relevantReport.filter(Report.id == int(long(x))).first())
+        return render_template('ResultPage.html', reports=result)
+    else:
+
+        return render_template('SearchPage.html', form=form)
 
 @app.route('/browse/<int:fromID>/<int:toID>', methods=['GET', 'POST'])
 def browsePage(fromID, toID):

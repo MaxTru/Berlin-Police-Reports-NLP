@@ -40,7 +40,7 @@ def init_db():
                                                  reports_lines[i][reports_lines[i].index(".") + 1:].strip().decode("utf-8"),
                                                  metadata_lines[i].split(",")[2].strip().decode("utf-8"),
                                                  label_lines[i].strip().decode("utf-8"))
-        print("Insert report with the following ID into the database: " + str(db_report.id))
+        #print("Insert report with the following ID into the database: " + str(db_report.id))
         db_session.add(db_report)
         i += 1
 

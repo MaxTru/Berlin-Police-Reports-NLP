@@ -20,13 +20,6 @@
                     All Reports
                 {% endif %}
             </a>
-            <a href="{{ url_for('classes') }}">
-            {% if request.path.startswith(url_for('classes')) %}
-                    <b>Classes</b>
-                {% else %}
-                    Classes
-                {% endif %}
-            </a>
         </div>
         <hr>
         {% with messages = get_flashed_messages() %}
