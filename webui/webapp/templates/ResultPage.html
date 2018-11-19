@@ -2,7 +2,15 @@
 
 {% block content %}
     <h1>SearchResults</h1>
-    {% for result in results %}
-       <li>{{ result }}</li>
-    {% endfor %}
+    {% if reports %}
+        {% for report in reports %}
+            <div class="report">
+                <div class="reportTitle">
+                <a href="/view/{{ report.id }}">{{ report.title }}</a>
+                </div>
+            <div class="reportLocDate">{{ report.location }} | {{ report.date }}</div>
+            <div class="reportLink">{{ " ".join(report.event.split()[0:30]) + " [...]" }}</div>
+            </div>
+        {% endfor %}
+    {% endif %}
 {% endblock %}
