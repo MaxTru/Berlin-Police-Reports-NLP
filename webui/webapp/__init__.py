@@ -7,8 +7,6 @@ import os
 app = Flask(__name__)
 app.config.from_object(Config)
 
-from webui.webapp import routes
-
 # After startup initialize the database.
 from webui.database import db_setup
 db_setup.init_db()
