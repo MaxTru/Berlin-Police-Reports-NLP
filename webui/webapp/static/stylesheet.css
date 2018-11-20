@@ -4,7 +4,7 @@ body {
 
 .report {
     padding-bottom: 15;
-    width: 650px;
+    width: 700px;
 }
 
 a {
@@ -25,6 +25,33 @@ a:hover {
     font-weight: bold;
 }
 
+.reportClassSticker {
+    background-color: #eee;
+    font-weight: 400;
+    border-radius: 6px;
+    color: #000;
+    padding: 2px 9px;
+    font-size: 12px;
+}
+
+.reportClassSticker:hover {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.reportClassFilters {
+    background-color: #eee;
+    font-weight: 400;
+    border-radius: 6px;
+    color: #000;
+    padding: 2px 9px;
+    font-size: 12px;
+}
+
+.filterStickers {
+    padding-bottom: 12px;
+}
+
 ul {
     list-style-type: none;
     margin: 0;
@@ -34,4 +61,9 @@ ul {
 
 li {
     float: left;
+}
+
+h1 {
+    padding-bottom: 6px;
+    margin: 0px;
 }

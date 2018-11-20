@@ -8,3 +8,9 @@ class Config(object):
     REPORTS_LABELS = os.path.abspath("./starspace/results_testrun_20181110/predictions.txt")
     CONFIG_TOML = os.path.abspath("./search/config.toml")
     INDEX = os.path.abspath("idx")
+    LABEL_CAPTIONS = {
+        "__label__1": "Criminal Damage or Fire",
+        "__label__3": "Violent Crime",
+        "__label__4": "Traffic Offense",
+        "none": "No Filter"
+    }

@@ -1,15 +1,36 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>SearchResults</h1>
-   {% if reports %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".__label__3").click(function () {
+                $(".reportClassSticker:not(.__label__3)").parent().parent().hide();
+
+            });
+            $(".__label__1").click(function () {
+                $(".reportClassSticker:not(.__label__1)").parent().parent().hide();
+            });
+            $(".__label__4").click(function () {
+                $(".reportClassSticker:not(.__label__4)").parent().parent().hide();
+            });
+        });
+    </script>
+    <h1>Search Results</h1>
+    <div class="filterStickers">
+        <span class="reportClassFilters" id="__label__1">{{ labelCaptions["__label__1"] }}</span>
+        <span class="reportClassFilters" id="__label__3">{{ labelCaptions["__label__3"] }}</span>
+        <span class="reportClassFilters" id="__label__4">{{ labelCaptions["__label__4"] }}</span>
+    </div>
+    {% if reports %}
         {% for report in reports %}
             <div class="report">
                 <div class="reportTitle">
-                <a href="/view/{{ report.id }}">{{ report.title }}</a>
+                    <a href="/view/{{ report.id }}">{{ report.title }}</a>
+                    <span class="reportClassSticker {{ report.label }}">{{ labelCaptions[report.label] }}</span>
                 </div>
-            <div class="reportLocDate">{{ report.location }} | {{ report.date }}</div>
-            <div class="reportLink">{{ " ".join(report.event.split()[0:30]) + " [...]" }}</div>
+                <div class="reportLocDate">{{ report.location }} | {{ report.date }}</div>
+                <div class="reportLink">{{ " ".join(report.event.split()[0:30]) + " [...]" }}</div>
             </div>
         {% endfor %}
     {% endif %}

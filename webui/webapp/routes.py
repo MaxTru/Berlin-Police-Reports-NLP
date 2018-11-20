@@ -5,6 +5,7 @@ from webui.webapp import app
 from webui.webapp.forms import SearchForm, FilterForm
 from webui.database.models import Report
 from sqlalchemy import and_, desc, asc
+from webui.flaskconfig import Config
 import subprocess
 import re
 
@@ -26,8 +27,8 @@ def searchPageResults():
     Returns ResultPage.html with the query results (docs)."""
     form = SearchForm(request.form)
     if form.validate_on_submit():
-        # TODO: This is a hack, but when running metapy directly in Flask is runs forever. This is why I run it as \
-        # TODO: a separate process
+        # This is a hack, but when running metapy directly in Flask is runs forever. This is why I run it as \
+        # a separate process
         proc = subprocess.Popen(["python", "search/searcher.py"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
         proc.stdin.write(form.query.data.encode("utf-8").strip() + "\n")
         proc.stdin.close()
@@ -40,9 +41,9 @@ def searchPageResults():
         result = []
         for x in relevantIDs:
             result.append(relevantReport.filter(Report.id == int(long(x))).first())
-        return render_template('ResultPage.html', reports=result)
+        labelCaptions = Config.LABEL_CAPTIONS
+        return render_template('ResultPage.html', reports=result, labelCaptions=labelCaptions)
     else:
-
         return render_template('SearchPage.html', form=form)
 
 @app.route('/browse/<int:fromID>/<int:toID>', methods=['GET', 'POST'])
