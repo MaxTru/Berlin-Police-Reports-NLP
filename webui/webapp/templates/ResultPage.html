@@ -4,23 +4,37 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
-            $(".__label__3").click(function () {
+            $(".__label__3, .reportClassFilters#__label__3").click(function () {
+                $(".reportClassSticker").parent().parent().show();
                 $(".reportClassSticker:not(.__label__3)").parent().parent().hide();
-
+                $(".reportClassFilters").css("font-weight", "normal");
+                $(".reportClassFilters#__label__3").css("font-weight", "bold");
             });
-            $(".__label__1").click(function () {
+            $(".__label__1, .reportClassFilters#__label__1").click(function () {
+                $(".reportClassSticker").parent().parent().show();
                 $(".reportClassSticker:not(.__label__1)").parent().parent().hide();
+                $(".reportClassFilters").css("font-weight", "normal");
+                $(".reportClassFilters#__label__1").css("font-weight", "bold");
             });
-            $(".__label__4").click(function () {
+            $(".__label__4, .reportClassFilters#__label__4").click(function () {
+                $(".reportClassSticker").parent().parent().show();
                 $(".reportClassSticker:not(.__label__4)").parent().parent().hide();
+                $(".reportClassFilters").css("font-weight", "normal");
+                $(".reportClassFilters#__label__4").css("font-weight", "bold");
+            });
+            $(".reportClassFilters#none").click(function () {
+                $(".reportClassSticker").parent().parent().show();
+                $(".reportClassFilters").css("font-weight", "normal");
             });
         });
     </script>
-    <h1>Search Results</h1>
+    <h1>Search Results for: "{{ query }}"</h1>
     <div class="filterStickers">
+        <span id="filtersLabel">Filter:</span>
         <span class="reportClassFilters" id="__label__1">{{ labelCaptions["__label__1"] }}</span>
         <span class="reportClassFilters" id="__label__3">{{ labelCaptions["__label__3"] }}</span>
         <span class="reportClassFilters" id="__label__4">{{ labelCaptions["__label__4"] }}</span>
+        <span class="reportClassFilters" id="none">{{ labelCaptions["none"] }}</span>
     </div>
     {% if reports %}
         {% for report in reports %}

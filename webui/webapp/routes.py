@@ -8,6 +8,9 @@ from sqlalchemy import and_, desc, asc
 from webui.flaskconfig import Config
 import subprocess
 import re
+import logging
+
+logger = logging.getLogger(__name__)
 
 @app.route('/', methods=['GET'])
 @app.route('/search', methods=['GET'])
@@ -17,6 +20,7 @@ def searchPage():
     -------
     Returns the SearchPage.html with the initialized query form."""
     form = SearchForm(request.form)
+    logger.info("Rendering SearchPage.html and sending to: %s", request.remote_addr)
     return render_template('SearchPage.html', form=form)
 
 @app.route('/search', methods=['POST'])
@@ -35,15 +39,19 @@ def searchPageResults():
         while proc.returncode is None:
             proc.poll()
         results = proc.stdout.read()
-        print("Retrieved reports and ranking: " + results.splitlines()[0])
+        logger.info("Started Searcher as separate process and retrieved reports for query '%s' successfully", form.query.data)
+        logger.info("Retrieved result from searcher: %s", results.splitlines()[0])
         relevantIDs = re.findall("\d+L", results.splitlines()[0])
         relevantReport = Report.query
         result = []
         for x in relevantIDs:
             result.append(relevantReport.filter(Report.id == int(long(x))).first())
+            logger.debug("Appended report to result-set with ID: %s", int(long(x)))
         labelCaptions = Config.LABEL_CAPTIONS
-        return render_template('ResultPage.html', reports=result, labelCaptions=labelCaptions)
+        logger.info("Rendering ResultPage.html and sending to: %s", request.remote_addr)
+        return render_template('ResultPage.html', reports=result, labelCaptions=labelCaptions, query=form.query.data.strip())
     else:
+        logger.info("Rendering SearchPage.html and sending to: %s", request.remote_addr)
         return render_template('SearchPage.html', form=form)
 
 @app.route('/browse/<int:fromID>/<int:toID>', methods=['GET', 'POST'])
@@ -58,41 +66,49 @@ def browsePage(fromID, toID):
     if (not filterForm.validate_on_submit()) and "classes" in session:
         filterForm.classes.data = session["classes"]
 
-    # TODO: implement error handling (e.g. not too many results at once
     displayedPages = toID - fromID
-    # Transform from 1-indexed to 0-indexed
-    fromID = fromID - 1
-    retrievedReports = Report.query
-
-    # Handle Ordering Filter
-    if filterForm.order.data == 'asc':
-        session["ordering"]=filterForm.order.data
-        retrievedReports = retrievedReports.order_by(asc(Report.date))
-    elif filterForm.order.data == 'desc':
-        session["ordering"] = filterForm.order.data
-        retrievedReports = retrievedReports.order_by(desc(Report.date))
+    if displayedPages > 200 or displayedPages < 1:
+        # Not allowed, return empty page
+        logger.info("Invalid amount of reports to be displayed received: %s", displayedPages)
+        logger.info("Rendering empty BrowsePage.html and sending to: %s", request.remote_addr)
+        return render_template('BrowsePage.html', displayedPages=displayedPages, toID=toID,
+                               filterForm=filterForm)
     else:
-        session["ordering"] = filterForm.order.data
-        retrievedReports = retrievedReports
+        # Transform from 1-indexed to 0-indexed
+        fromID = fromID - 1
+        retrievedReports = Report.query
 
-    # Handle Classes Filter
-    if filterForm.classes.data == 'none':
-        session["classes"]=filterForm.classes.data
-        retrievedReports = retrievedReports
-    else:
-        session["classes"] = filterForm.classes.data
-        retrievedReports = retrievedReports.filter(Report.label==filterForm.classes.data)
+        # Handle Ordering Filter
+        if filterForm.order.data == 'asc':
+            session["ordering"]=filterForm.order.data
+            retrievedReports = retrievedReports.order_by(asc(Report.date))
+        elif filterForm.order.data == 'desc':
+            session["ordering"] = filterForm.order.data
+            retrievedReports = retrievedReports.order_by(desc(Report.date))
+        else:
+            session["ordering"] = filterForm.order.data
+            retrievedReports = retrievedReports
 
-    retrievedReports = retrievedReports.limit(toID - fromID) \
-        .offset(fromID) \
-        .all()
-    return render_template('BrowsePage.html', reports=retrievedReports, displayedPages=displayedPages, toID=toID,
-                           filterForm=filterForm)
+        # Handle Classes Filter
+        if filterForm.classes.data == 'none':
+            session["classes"]=filterForm.classes.data
+            retrievedReports = retrievedReports
+        else:
+            session["classes"] = filterForm.classes.data
+            retrievedReports = retrievedReports.filter(Report.label==filterForm.classes.data)
+
+        retrievedReports = retrievedReports.limit(toID - fromID) \
+            .offset(fromID) \
+            .all()
+        logger.info("Rendering BrowsePage.html and sending to: %s", request.remote_addr)
+        return render_template('BrowsePage.html', reports=retrievedReports, displayedPages=displayedPages, toID=toID,
+                               filterForm=filterForm)
 
 @app.route('/classes', methods=['GET'])
 def classes():
     """A user may browse the police reports by a set of categories."""
     # TODO here we need to render pre-classified police reports
+    logger.info("Rendering Classes.html and sending to: %s", request.remote_addr)
     return render_template('Classes.html')
 
 @app.route('/view/<int:id>', methods=['GET'])
@@ -101,8 +117,11 @@ def viewPage(id):
     GET Requests expects to get the ID of the report passed in the field 'ID'."""
     retrievedReport = Report.query.filter(Report.id == id).first()
     if not bool(retrievedReport):
+        logger.info("Could not retrieve report with requested ID: %s", id)
+        logger.info("Rendering ViewPage.html and sending to: %s", request.remote_addr)
         return render_template('ViewPage.html', empty="TRUE")
     else:
+        logger.info("Rendering ViewPage.html and sending to: %s", request.remote_addr)
         return render_template('ViewPage.html',
                                result="TRUE",
                                title=retrievedReport.title,

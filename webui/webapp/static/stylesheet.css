@@ -7,6 +7,10 @@ body {
     width: 700px;
 }
 
+.singleReport {
+    width: 700px;
+}
+
 a {
     text-decoration: none;
     color: blue;
@@ -32,9 +36,10 @@ a:hover {
     color: #000;
     padding: 2px 9px;
     font-size: 12px;
+    font-style: normal;
 }
 
-.reportClassSticker:hover {
+.reportClassSticker:hover, .reportClassFilters:hover {
     font-weight: bold;
     cursor: pointer;
 }
@@ -66,4 +71,34 @@ li {
 h1 {
     padding-bottom: 6px;
     margin: 0px;
+}
+
+#filtersLabel {
+    font-size: 14px;
+}
+
+#filteringLabel, #orderingLabel {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+li label {
+    font-size: 12px;
+}
+
+input[type="radio"] {
+    width: 12px;
+    height: 12px;
+}
+
+input[type="submit"] {
+    font-size: 12px;
+}
+
+#navNext {
+    float: right;
+}
+
+.nav {
+    width: 700px;
 }

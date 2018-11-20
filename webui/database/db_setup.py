@@ -7,7 +7,9 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from webui.flaskconfig import  Config
 import os
+import logging
 
+logger = logging.getLogger(__name__)
 engine = create_engine('sqlite:///data/reports.db', convert_unicode=True)
 db_session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,
@@ -25,8 +27,9 @@ def init_db():
     import webui.database.models
     # First drop all, then create all tables
     Base.metadata.drop_all(bind=engine)
+    logger.info("Database schema dropped")
     Base.metadata.create_all(bind=engine)
-
+    logger.info("Database schema re-created")
     # Insert reports from files
     i = 0
     reports_lines = open(os.path.abspath(Config.REPORTS_PAYLOAD), "r").readlines()
@@ -45,3 +48,4 @@ def init_db():
         i += 1
 
     db_session.commit()
+    logger.info("%s new records inserted into database", str(i))

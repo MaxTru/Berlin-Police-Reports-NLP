@@ -2,6 +2,7 @@
 
 {% block content %}
     <h1>Police Report</h1>
+    <div class="singleReport">
         {% if empty %}<h2>ID not found</h2>{% endif %}
         {% if title %}<h2>{{ title }}</h2>{% endif %}
         {% if location %}<b>{{ location }}</b></br>{% endif %}
@@ -9,4 +10,5 @@
         {% if event %}{{ event }}</br>{% endif %}
         </br>
         {% if link %}<a href="{{ link }}">{{ link }}</a></br>{% endif %}
+    </div>
 {% endblock %}
