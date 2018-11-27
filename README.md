@@ -55,8 +55,10 @@ StarSpace is used in this project to perform a document classification on all po
 2. Violent Crime
 3. Criminal Damage or Fire
 
-#### Example
+#### Usage of StarSpace in this project
 A training dataset with random n=500 docs and a test dataset with random n=250 documents. The entire document tokenization, training, testing and prediction is performed in the script _train_and_apply_model.sh_. The script must be run in a directory where StarSpace is located (see https://github.com/facebookresearch/StarSpace/). The predictions are picked up in the Flask WebApp to allow the user to browse police reports by document class (see 3 classes mentioned before).
+
+A more detailed description of how StarSpace was used can be found in this dedicated post: https://github.com/MaxTru/Berlin-Police-Reports-NLP/blob/master/starspace/StarSpace-UsageDescription.pdf .
 
 # Usage
 #### Requirements
