@@ -1,3 +1,5 @@
+# README IS CURRENTLY WORK IN PROGRESS
+
 # Berlin-Police-Reports-NLP
 
 This is a Search Engine for Berlin Police Reports for incidents and crimes that have been reported to the Berlin Police from 2014. The dataset is available at www.berlin.de/polizei/*
@@ -5,14 +7,6 @@ This is a Search Engine for Berlin Police Reports for incidents and crimes that 
 The project consists of two parts: A. web crawler to scrape the archive police reports B. a Flask app for search, browse and classify reports/incidents.
 
 The Search Engine uses MeTa toolkit's Python bindings https://meta-toolkit.org/
-
-# General Architecture & Usage: 
-
-The scraped data is cleansed for use by MeTa functions. The documents are indexed using inverted index. The user inputs a required query, which is then used to rank the available documents to return the top matching document ids. The result is further used to parse the report details - all displayed in the results page.
-
-A user can also browse the entire dataset with or without specific filters. Filters have been created to classify the incidents which allows users to narrow down the search function.
-
-Classes ---
 
 # Required Packages
 * Click
