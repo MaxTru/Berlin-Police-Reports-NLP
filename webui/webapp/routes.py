@@ -4,7 +4,7 @@ from flask import render_template, request, session
 from webui.webapp import app
 from webui.webapp.forms import SearchForm, FilterForm
 from webui.database.models import Report
-from sqlalchemy import and_, desc, asc
+from sqlalchemy import desc, asc
 from webui.flaskconfig import Config
 import subprocess
 import re
