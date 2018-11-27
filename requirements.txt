@@ -1,7 +1,40 @@
- Click
- Flask
- Flask-WTF
- Jinja2
- WTForms
- Scrapy
- Metapy
+Automat == 0.7.0
+PyDispatcher == 2.0.5
+PyHamcrest == 1.9.0
+Scrapy == 1.5.1
+Twisted == 18.7.0
+asn1crypto == 0.24.0
+attrs == 18.1.0
+beautifulsoup4 == 4.6.3
+certifi == 2018.8.24
+cffi == 1.11.5
+chardet == 3.0.4
+colorama == 0.3.9
+configparser == 3.5.0
+constantly == 15.1.0
+cryptography == 2.3.1
+cssselect == 1.0.3
+enum34 == 1.1.6
+functools32 == 3.2.3.post2
+hyperlink == 18.0.0
+idna == 2.6
+incremental == 17.5.0
+ipaddress == 1.0.22
+lxml == 4.2.4
+metapy == 0.2.13
+numpy == 1.15.2
+parsel == 1.5.0
+pip == 18.1
+pyOpenSSL == 18.0.0
+pyasn1 == 0.4.4
+pyasn1_modules == 0.2.2
+pycparser == 2.18
+pywin32 == 223
+queuelib == 1.5.0
+requests == 2.18.4
+service_identity == 17.0.0
+setuptools == 39.0.1
+six == 1.11.0
+urllib3 == 1.22
+w3lib == 1.19.0
+zope.interface == 4.5.0
