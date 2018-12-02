@@ -1,6 +1,7 @@
 """Flask startup"""
-from flask import Flask
 from webui.flaskconfig import Config
+from flask import Flask
+
 import os
 import shutil
 import logging
@@ -18,7 +19,7 @@ logger.setLevel(logging.INFO)
 app = Flask(__name__)
 app.config.from_object(Config)
 from webui.webapp import routes
-logger.info("Flask app initiated")
+logger.info("Flask initiated")
 
 # After startup initialize the database.
 from webui.database import db_setup

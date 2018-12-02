@@ -11,6 +11,8 @@ import logging
 
 logger = logging.getLogger(__name__)
 engine = create_engine('sqlite:///data/reports.db', convert_unicode=True)
+# Next line is the pythonanywhere UNIX config
+# engine = create_engine('sqlite:////home/MaxTru/berlinpolicereports/data/reports.db', convert_unicode=True) # UNIX configuration
 db_session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,
                                          bind=engine))
@@ -24,6 +26,7 @@ def init_db():
     1. Delete entire Schema
     2. Set-Up entire Schema
     3. Insert all reports which are found under flaksconfig.Config"""
+    logger.info("Database initialization started")
     import webui.database.models
     # First drop all, then create all tables
     Base.metadata.drop_all(bind=engine)
