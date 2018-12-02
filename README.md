@@ -1,5 +1,3 @@
-# README IS CURRENTLY WORK IN PROGRESS
-
 # Berlin-Police-Reports-NLP
 # "Who needs this and why?"
 The Berlin (Germany) Police regularly publishes Police reports with significance for the public (~5-10 per day). They include from car accident to murder. The reports are publically available online since 2014: https://www.berlin.de/polizei/polizeimeldungen/archiv/​. However, the archive does not offer a search engine or any sort of categorization (besides years). Therefore the usability of this archive for journalists or citizens is very limited.
@@ -8,11 +6,11 @@ This project implements a Web GUI which allows the user to effectively search an
 
 # Project structure
 The project structure follows the key components of this project:
-1. Scrapy Webscraper **/scraper**
-2. Flask WebUI **/webui**
-3. Dataset (for additional information see _Dataset_) **/data**
-4. Starspace (for additional information see _Starspace_) **/starspace**
-5. MetaPy Search implementation **/search**
+1. Scrapy Webscraper **scraper/**
+2. Flask WebUI **webui/**
+3. Dataset (for additional information see _Dataset_) **data/**
+4. Starspace (for additional information see _Starspace_) **starspace/**
+5. MetaPy Search implementation **search/**
 
 # Architecture
 The application consists of four components: 
@@ -56,26 +54,35 @@ StarSpace is used in this project to perform a document classification on all po
 3. Criminal Damage or Fire
 
 #### Usage of StarSpace in this project
-A training dataset with random n=500 docs and a test dataset with random n=250 documents. The entire document tokenization, training, testing and prediction is performed in the script _train_and_apply_model.sh_. The script must be run in a directory where StarSpace is located (see https://github.com/facebookresearch/StarSpace/). The predictions are picked up in the Flask WebApp to allow the user to browse police reports by document class (see 3 classes mentioned before).
+A training dataset with random n=500 docs and a test dataset with random n=250 documents was used to train the StarSpace model. The entire document tokenization, training, testing and prediction is performed in the script _train_and_apply_model.sh_ (script is self-explanatory and includes further comments). The script must be run in a directory where StarSpace is located (see https://github.com/facebookresearch/StarSpace/). The predictions are picked up in the Flask WebApp to allow the user to browse police reports by document class (see 3 classes mentioned before).
 
 A more detailed description of how StarSpace was used can be found in this dedicated post: https://github.com/MaxTru/Berlin-Police-Reports-NLP/blob/master/starspace/StarSpace-UsageDescription.pdf .
 
-# Usage
+# How to use or try this project
+### Option A: visit publicly hosted instance
+An instance of this project is hosted on [http://maxtru.pythonanywhere.com/](http://maxtru.pythonanywhere.com/). This instance can be used to try out the key features of the project. However of course the web interface will not allow to initiate a new scraping of reports or a new training of the StarSpace model.
+### Option B:  run by yourself
 #### Requirements
-**WebUI**: To run the core component of this project - the WebUI - a working Python environment is required. The project was tested on Python 2.7. Full module requirements can be found in _requirements.txt_.
+**WebUI**: To run the core component of this project - the WebUI - a working Python environment is required. The project was tested on Python 2.7. Full module requirements can be found in _requirements.txt_. To run the webpage, JavaScript needs to be enabled in the used Browser. The WebPage was tested using Chrome.
 
-_The following components of this project are optional to run, since they are only used to create a clean dataset for the WebUI. A clean dataset is already provided (see _/data_)._
+_The following components of this project are optional to run, since they are only used to create a clean dataset for the WebUI. A clean dataset is already provided (see _data/_)._
 
 **Scraper**: To run the WebScraper a working Python environment is required. Besides Python, the data post-processing also requires a bash shell.
 
 **StarSpace**: To run the document classification with StarSpace a Linux environment and a a clone of the StarSpace Git repository (https://github.com/facebookresearch/Starspace.git) is required.
 
-#### How to use
-***A tutorial how to run this project will be added later***
+#### How to run
+**WebUI**: git clone this repo, set FLASK_APP = "webui/webapp/\_\_init\_\_.py", run "python -m flask run --with-threads" .
 
+_The following components of this project are optional to run, since they are only used to create a clean dataset for the WebUI. A clean dataset is already provided (see _data/_)._
+
+**Scraper**: git clone this repo, run "scrapy\cmdline.py runspider policeReportsSpider.py -o reports.csv". If you want to use the reports for the webui you need to split them into a payload and a metadata file using the "extract"-methods in the utils/policeReportUtils.py script, clean the metadata-file using the "data/Clear_double_dates.sh" and the "data/ISO_transform_date.sh" files and reference the two files in "webui/flaskconfig.py". During startup the WebUi will automatically pick up the files and reload the SQLite-DB with them. Additionally you need to provide the labels (predictions) for each report. The predictions can be created in the next step (StarSpace).
+
+**StarSpace**: git clone the StarSpace repo (https://github.com/facebookresearch/StarSpace/), git clone this repo, set the files you want to use for training, testing and as basis for prediction in the "starspace/train_and_apply_model.sh" file and run it on a Linux machine. 
+  
 # Authors and Contribution
-* Project Lead, Architecture, WebScraper, WebUI, TextClassification, Documentation: **Maximilian Trumpf**
-* Support and Search: **Saurav Chetry**
+* Project Lead, Architecture, WebScraper (scraper/), WebUI and database (webui/), TextClassification (starspace/), Documentation: **Maximilian Trumpf**
+* Support and Search (search/): **Saurav Chetry**
 
 # Sources
 ##### StarSpace
