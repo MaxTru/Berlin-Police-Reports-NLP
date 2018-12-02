@@ -1,6 +1,6 @@
 # Berlin-Police-Reports-NLP
 # "Who needs this and why?"
-The Berlin (Germany) Police regularly publishes Police reports with significance for the public (~5-10 per day). They include from car accident to murder. The reports are publically available online since 2014: https://www.berlin.de/polizei/polizeimeldungen/archiv/​. However, the archive does not offer a search engine or any sort of categorization (besides years). Therefore the usability of this archive for journalists or citizens is very limited.
+The Berlin (Germany) Police regularly publishes Police reports with significance for the public (~5-10 per day). They include from car accident to murder. The reports are publically available online since 2014: https://www.berlin.de/polizei/polizeimeldungen/archiv​. However, the archive does not offer a search engine or any sort of categorization (besides years). Therefore the usability of this archive for journalists or citizens is very limited.
  
 This project implements a Web GUI which allows the user to effectively search and filter these police reports by utilizing WebScraping, Information Retrieval and Text Classification technologies. The ultimate goal is to increase the usability of the Web Archive for journalists or interested citizens.
 
@@ -22,11 +22,11 @@ The application consists of four components:
 # Dataset
 #### Source and Description
 The Police Reports in this demo application are scraped from the following URIs:
-* 'https://www.berlin.de/polizei/polizeimeldungen/archiv/2014/'
-* 'https://www.berlin.de/polizei/polizeimeldungen/archiv/2015/'
-* 'https://www.berlin.de/polizei/polizeimeldungen/archiv/2016/'
-* 'https://www.berlin.de/polizei/polizeimeldungen/archiv/2017/'
-* 'https://www.berlin.de/polizei/polizeimeldungen/archiv/2018/'
+* 'https://www.berlin.de/polizei/polizeimeldungen/archiv/2014'
+* 'https://www.berlin.de/polizei/polizeimeldungen/archiv/2015'
+* 'https://www.berlin.de/polizei/polizeimeldungen/archiv/2016'
+* 'https://www.berlin.de/polizei/polizeimeldungen/archiv/2017'
+* 'https://www.berlin.de/polizei/polizeimeldungen/archiv/2018'
 
 The following attributes of a Police Report are considered in this demo application:
 1. date
