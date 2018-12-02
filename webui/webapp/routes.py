@@ -1,3 +1,4 @@
+# coding=utf-8
 """Defines the URIs which can called in the Flask Webapp and the logic behind."""
 
 from flask import render_template, request, session
@@ -34,12 +35,14 @@ def searchPageResults():
         # This is a hack, but when running metapy directly in Flask is runs forever. This is why I run it as \
         # a separate process
         proc = subprocess.Popen(["python", "search/searcher.py"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
-        proc.stdin.write(form.query.data.encode("utf-8").strip() + "\n")
+        query = form.query.data.encode("utf-8").strip()
+        query = re.sub(r"[^a-zA-Z0-9äÄöÖüÜ]+", ' ', query) # remove special characters
+        proc.stdin.write(query + "\n")
         proc.stdin.close()
         while proc.returncode is None:
             proc.poll()
         results = proc.stdout.read()
-        logger.info("Started Searcher as separate process and retrieved reports for query '%s' successfully", form.query.data)
+        logger.info("Started Searcher as separate process and retrieved reports for query '%s' successfully", query.decode("utf-8"))
         logger.info("Retrieved result from searcher: %s", results.splitlines()[0])
         relevantIDs = re.findall("\d+L", results.splitlines()[0])
         relevantReport = Report.query
@@ -49,7 +52,7 @@ def searchPageResults():
             logger.debug("Appended report to result-set with ID: %s", int(long(x)))
         labelCaptions = Config.LABEL_CAPTIONS
         logger.info("Rendering ResultPage.html and sending to: %s", request.remote_addr)
-        return render_template('ResultPage.html', reports=result, labelCaptions=labelCaptions, query=form.query.data.strip())
+        return render_template('ResultPage.html', reports=result, labelCaptions=labelCaptions, query=query.decode("utf-8"))
     else:
         logger.info("Rendering SearchPage.html and sending to: %s", request.remote_addr)
         return render_template('SearchPage.html', form=form)
