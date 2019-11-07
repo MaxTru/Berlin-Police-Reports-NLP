@@ -60,7 +60,7 @@ A more detailed description of how StarSpace was used can be found in this dedic
 
 # How to use or try this project
 ### Option A: visit publicly hosted instance
-An instance of this project is hosted on [http://maxtru.pythonanywhere.com/](http://maxtru.pythonanywhere.com/). This instance can be used to try out the key features of the project. However of course the web interface will not allow to initiate a new scraping of reports or a new training of the StarSpace model.
+An instance of this project is hosted on [http://maxtru.pythonanywhere.com/](http://maxtru.pythonanywhere.com/) [Please excuse the slow, low-performance hosting]. This instance can be used to try out the key features of the project. However of course the web interface will not allow to initiate a new scraping of reports or a new training of the StarSpace model.
 ### Option B:  run by yourself
 #### Requirements
 **WebUI**: To run the core component of this project - the WebUI - a working Python environment is required. The project was tested on Python 2.7. Full module requirements can be found in _requirements.txt_. To run the webpage, JavaScript needs to be enabled in the used Browser. The WebPage was tested using Chrome.
