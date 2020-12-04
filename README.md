@@ -72,13 +72,13 @@ _The following components of this project are optional to run, since they are on
 **StarSpace**: To run the document classification with StarSpace a Linux environment and a a clone of the StarSpace Git repository (https://github.com/facebookresearch/Starspace.git) is required.
 
 #### How to run
-**WebUI**: git clone this repo, set FLASK_APP = "webui/webapp/\_\_init\_\_.py", run "python -m flask run --with-threads" .
+**WebUI**: git clone this repo, set FLASK_APP = `webui/webapp/\_\_init\_\_.py`, run `python -m flask run --with-threads` .
 
 _The following components of this project are optional to run, since they are only used to create a clean dataset for the WebUI. A clean dataset is already provided (see _data/_)._
 
-**Scraper**: git clone this repo, run "scrapy\cmdline.py runspider policeReportsSpider.py -o reports.csv". If you want to use the reports for the webui you need to split them into a payload and a metadata file using the "extract"-methods in the utils/policeReportUtils.py script, clean the metadata-file using the "data/Clear_double_dates.sh" and the "data/ISO_transform_date.sh" files and reference the two files in "webui/flaskconfig.py". During startup the WebUi will automatically pick up the files and reload the SQLite-DB with them. Additionally you need to provide the labels (predictions) for each report. The predictions can be created in the next step (StarSpace).
+**Scraper**: git clone this repo, run `scrapy\cmdline.py runspider policeReportsSpider.py -o reports.csv`. If you want to use the reports for the webui you need to split them into a payload and a metadata file using the "extract"-methods in the utils/policeReportUtils.py script, clean the metadata-file using the `data/Clear_double_dates.sh` and the `data/ISO_transform_date.sh` files and reference the two files in `webui/flaskconfig.py`. During startup the WebUi will automatically pick up the files and reload the SQLite-DB with them. Additionally you need to provide the labels (predictions) for each report. The predictions can be created in the next step (StarSpace).
 
-**StarSpace**: git clone the StarSpace repo (https://github.com/facebookresearch/StarSpace/), git clone this repo, set the files you want to use for training, testing and as basis for prediction in the "starspace/train_and_apply_model.sh" file and run it on a Linux machine. 
+**StarSpace**: git clone the StarSpace repo (https://github.com/facebookresearch/StarSpace/), git clone this repo, set the files you want to use for training, testing and as basis for prediction in the `starspace/train_and_apply_model.sh` file and run it on a Linux machine. 
   
 # Authors and Contribution
 * Project Lead, Architecture, WebScraper (scraper/), WebUI and database (webui/), TextClassification (starspace/), Documentation: **Maximilian Trumpf**
